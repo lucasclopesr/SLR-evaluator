@@ -25,6 +25,8 @@ std::regex RE_relop("(<=|>=|<>|=|<|>)");
 std::regex RE_addop("(\\+|-|or)");
 std::regex RE_mulop("(\\*|/|div|mod|and)");
 std::regex RE_fun("(sin|cos|log)");
+std::regex RE_parentheses("(\\(*\\))");
+std::regex RE_not("NOT");
 
 std::vector <std::string> split(std::string s){
   /* Quebra uma string que contém expressões separadas por vírgual em
@@ -57,6 +59,35 @@ float evaluate_factor(std::string factor){
    *        | NOT factor
    * if `identifier`, pedir o valor do identificador como entrada para o usuário
    */
+  std::cout << "evaluate_factor: " << factor << std::endl;
+  std::smatch op;
+  if (std::regex_search(factor, op, RE_parentheses)){
+    std::cout << "PARENTHESIS EXPR match: " << op[1] << std::endl;
+    return 0.0;
+  } else if (std::regex_search(factor, op, RE_fun)){
+    std::cout << "FUNCT EXPR match: " << op[0] << std::endl;
+    return 0.0;
+  } else if (std::regex_search(factor, op, RE_not)){
+    std::cout << "NOT  match: " << op[0] << std::endl;
+    return 0.0;
+  } else if (std::regex_search(factor, op, RE_id)){
+    std::cout << "IDENTIFIER match: " << op[0] << std::endl;
+    return 0.0;
+  } else if (std::regex_search(factor, op, RE_constant)){
+    std::cout << "CONSTANT match: " << op[0] << std::endl;
+    return 0.0;
+  } else {
+    std::cout << "ERRO! SIMBOLO TERMINAL NAO RECONHECIDO" << std::endl;
+  }
+  return 0.0;
+};
+
+float evaluate_mulop(float factor1, float factor2, std::string mulop){
+  /*
+   * Calculate MULOP relation
+  */
+
+  std::cout << "Evaluate mulop!" << std::endl;
   return 0.0;
 };
 
@@ -68,9 +99,42 @@ float evaluate_term(std::string term){
    * on second term
    * else call evaluate_factor
    */
-  return 0.0;
+
+  std::smatch op;
+  if (std::regex_search(term, op, RE_mulop)){
+    // Caso term := term MULOP factor
+    std::cout << "MULOP match: " << op[1] << std::endl;
+    
+    size_t mulop_pos = term.find(op[1]);
+    // simple expression before ADDOP
+    std::string term1 = term.substr(0,mulop_pos);
+    
+    // simple expression after ADDOP
+    std::string factor = term.substr(mulop_pos+1,term.length());
+
+
+    float term_result = evaluate_term(term1);
+    float factor_result = evaluate_factor(factor);
+    
+    float result = evaluate_mulop(term_result, factor_result, op[1]);
+    return result;
+  } else {
+    // simple_expr := term
+    evaluate_factor(term);
+  }
+ 
+ return 0.0;
 };
 
+
+float evaluate_addop(float term1, float term2, std::string addop){
+  /*
+   * Calculate ADDOP relation
+  */
+
+  std::cout << "Evaluate addop!" << std::endl;
+  return 0.0;
+};
 
 float evaluate_simple_expr(std::string simple_expr){
   /* simple_expr := term
@@ -84,14 +148,40 @@ float evaluate_simple_expr(std::string simple_expr){
    * else call evaluate_term with no sign (positive as default?)
    *
    */
-   return 0.0;
+  // Caso expr := simple_expr
+  // simple_expr := term
+  //              | sign term
+  //              | simple_expr ADDOP term
+
+  std::smatch op;
+  if (std::regex_search(simple_expr, op, RE_addop)){
+    std::cout << "ADDOP match: " << op[1] << std::endl;
+    
+    size_t addop_pos = simple_expr.find(op[1]);
+    // simple expression before ADDOP
+    std::string se1 = simple_expr.substr(0,addop_pos);
+    
+    // simple expression after ADDOP
+    std::string term = simple_expr.substr(addop_pos+1,simple_expr.length());
+
+
+    float se1_result = evaluate_simple_expr(se1);
+    float term_result = evaluate_term(term);
+    
+    float result = evaluate_addop(se1_result, term_result, op[1]);
+  } else {
+    // simple_expr := term
+    evaluate_term(simple_expr);
+  }
+  return 0.0;
 };
 
 float evaluate_relop(float se1, float se2, std::string relop){
-   /*
-    * Calculate RELOP relation
-   */
-   return 0.0;
+  /*
+   * Calculate RELOP relation
+  */
+  std::cout << "Evaluate relop!" << std::endl;
+  return 0.0;
 };
 
 void evaluate_expr(std::string expr){
@@ -118,74 +208,13 @@ void evaluate_expr(std::string expr){
     
     bool result = evaluate_relop(se1_result, se2_result, op[1]);
     //return result;
-
-    // Caso expr := simple_expr RELOP simple_expr
-    // avaliar simple_expr de cada lado e retornar o resultado do RELOP encontrado
-    // @TODO: se RELOP size > 1, erro!
-    // std::cout << "expr := simple_expr RELOP simple_expr" << std::endl;
-    // std::sregex_iterator iter_relop(expr.begin(), expr.end(), RE_relop);
-    // while (iter_relop != end){
-    //   for(unsigned i = 0; i < iter_relop->size() - 1; ++i)
-    //   {
-    //     if ((*iter_relop)[i].compare("") != 0){
-    //       std::cout << "RELOP match: " << (*iter_relop)[i] << std::endl;
-    //       
-    //       std::string relop_pos = expr.find((*iter_relop)[i]);
-    //       // simple expression before RELOP
-    //       std::string se1 = expr.substr(0,relop_pos);
-    //       std::cout << "se1: " << se1 << std::endl;
-    //       /
-    //       // simple expression after RELOP
-    //       std::string se2 = expr.substr(relop_pos,expr.length());
-    //       std::cout << "se2: " << se2 << std::endl;
-    //     }
-    //   }
-    //   ++iter_relop;
-    // }
   } else {
     std::cout << "SIMPLE EXPRESSION match: " << expr << std::endl;
     float se_result = evaluate_simple_expr(expr);
   }
 
-  // Caso expr := simple_expr
-  // simple_expr := term
-  //              | sign term
-  //              | simple_expr ADDOP term
 
-  /*if (std::regex_search(expr, op, RE_addop)){
-    std::cout << "SIMPLE EXPRESSION match: " << op[1] << std::endl;
-    // Caso simple_expr := simple_expr ADDOP term
-    // avaliar expressao e retornar o resultado
-    // std::cout << "expr := simple_expr ADDOP term" << std::endl;
-    // std::sregex_iterator iter_addop(expr.begin(), expr.end(), RE_addop);
-    // while (iter_addop != end){
-    //   for(unsigned i = 0; i < iter_addop->size() - 1; ++i)
-    //   {
-    //     if ((*iter_addop)[i].compare("") != 0){
-    //       std::cout << "ADDOP match: " << (*iter_addop)[i] << std::endl;
-    //     }
-    //   }
-    //   ++iter_addop;
-    // }
-  }
-
-  if (std::regex_search(expr, RE_mulop)){
-    // Caso term := term
-    // avaliar expressao e retornar o resultado
-    std::cout << "expr := simple_expr ADDOP term" << std::endl;
-    std::sregex_iterator iter_addop(expr.begin(), expr.end(), RE_addop);
-    while (iter_addop != end){
-      for(unsigned i = 0; i < iter_addop->size() - 1; ++i)
-      {
-        if ((*iter_addop)[i].compare("") != 0){
-          std::cout << "ADDOP match: " << (*iter_addop)[i] << std::endl;
-        }
-      }
-      ++iter_addop;
-    }
-  }
- 
-  if (std::regex_search(expr, RE_addop)){
+  /*if (std::regex_search(expr, RE_addop)){
     // Caso simple_expr := term
     // avaliar expressao e retornar o resultado
     std::cout << "expr := simple_expr ADDOP term" << std::endl;

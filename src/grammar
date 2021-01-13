@@ -1,0 +1,100 @@
+expr_list :
+            expr
+            expr_list , expr
+
+expr : 
+        simple_expr
+        simple_expr RELOP simple_expr
+
+simple_expr : 
+                term
+                sign term
+                simple_expr ADDOP term 
+term : 
+        factor
+        term MULOP factor
+
+factor : 
+        identifier
+        constant
+        ( expr )
+        function_ref
+        NOT factor
+
+function_ref : 
+                func_identifier
+                func_identifier ( expr )
+
+sign :
+        +
+        -
+
+
+
+E' -> expr_list
+expr_list -> expr_list , expr
+expr -> simple_expr
+expr -> simple_expr RELOP simple_expr
+simple_expr -> term
+simple_expr -> sign term
+simple_expr -> simple_expr + term
+term -> factor
+term -> term * factor
+factor -> identifier
+factor -> constant
+factor -> ( expr )
+factor -> function_ref
+factor -> NOT factor
+function_ref -> func_identifier
+function_ref -> func_identifier ( expr_list )
+sign -> +
+sign -> -
+
+S' -> S
+S -> C C
+C -> c C
+C -> d
+
+
+E' -> E
+E -> E + T
+E -> T
+T -> T * F
+T -> F
+F -> ( E )
+F -> id
+
+
+E' -> expr_list
+expr_list -> expr_list , expr
+expr_list -> expr
+expr -> simple_expr
+expr -> simple_expr RELOP simple_expr
+simple_expr -> term
+simple_expr -> sign term
+simple_expr -> simple_expr ADDOP term
+term -> factor
+term -> term MULOP factor
+factor -> identifier
+factor -> constant
+factor -> ( expr )
+factor -> function_ref
+factor -> NOT factor
+function_ref -> func_identifier
+function_ref -> func_identifier ( expr_list )
+
+E' -> expr
+expr -> simple_expr
+expr -> simple_expr RELOP simple_expr
+simple_expr -> term
+simple_expr -> sign term
+simple_expr -> simple_expr ADDOP term
+term -> factor
+term -> term MULOP factor
+factor -> identifier
+factor -> constant
+factor -> ( expr )
+factor -> function_ref
+factor -> NOT factor
+function_ref -> func_identifier
+function_ref -> func_identifier ( expr )

@@ -37,8 +37,8 @@
 
 class SLR_Table {
     public:
-        std::string Action[STATES][TERMINALS];
-        int Goto[STATES][NON_TERMINALS];
+        std::string action[STATES][TERMINALS];
+        int go_to[STATES][NON_TERMINALS];
         SLR_Table();
         void printAction();
         void printGoto();

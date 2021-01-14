@@ -98,3 +98,25 @@ factor -> function_ref
 factor -> NOT factor
 function_ref -> func_identifier
 function_ref -> func_identifier ( expr )
+
+
+ this->action[0][COMMA] = ACTION_ERROR;
+    this->action[0][RELOP] = ACTION_ERROR;
+    this->action[0][SIGN] = ACTION_ERROR;
+    this->action[0][ADDOP] = ACTION_ERROR;
+    this->action[0][MULOP] = ACTION_ERROR;
+    this->action[0][IDENTIFIER] = ACTION_ERROR;
+    this->action[0][CONSTANT] = ACTION_ERROR;
+    this->action[0][OPEN_P] = ACTION_ERROR;
+    this->action[0][CLOSE_P] = ACTION_ERROR;
+    this->action[0][NOT] = ACTION_ERROR;
+    this->action[0][FUNC_IDENTIFIER] = ACTION_ERROR;
+    this->action[0][EOE] = ACTION_ERROR;
+
+    this->go_to[0][EXPR_EXP] = GOTO_ERROR;
+    this->go_to[0][EXPR_LIST] = GOTO_ERROR;
+    this->go_to[0][EXPR] = GOTO_ERROR;
+    this->go_to[0][SIMPLE_EXPR] = GOTO_ERROR;
+    this->go_to[0][TERM] = GOTO_ERROR;
+    this->go_to[0][FACTOR] = GOTO_ERROR;
+    this->go_to[0][FUNCTION_REF] = GOTO_ERROR;

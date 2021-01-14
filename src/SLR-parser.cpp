@@ -1,6 +1,5 @@
 #include <SLR-parser.hpp>
 
-#define DEBBUGER false
 
 SLR_Parser::SLR_Parser(){
     this->state_stack.push_back(ENTRY_STATE);

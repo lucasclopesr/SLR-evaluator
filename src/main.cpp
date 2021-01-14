@@ -13,5 +13,8 @@ int main(){
     if(parser.parse(input)){
         std::cout << "VAMODALEPORAAAAAAAA" << std::endl;
     }
+    if(parser.parse(input)){
+        std::cout << "VAMODALEPORAAAAAAAA" << std::endl;
+    }
     return 0;
 }

@@ -2,6 +2,7 @@
 #define SLR_TABLE
 
 #include <string>
+#include <tuple>
 #include <iostream>
 
 //Terminal symbol's
@@ -29,21 +30,23 @@
 
 #define STATES 25 // Number of states in the grammars SLR table
 
-#define ACTION_ERROR "-"
-#define ACTION_ACC "Acc"
+#define ACTION_ERROR '-'
+#define ACTION_ACC 'a'
 
 #define GOTO_ERROR -1
 
 
 class SLR_Table {
     public:
-        std::string action[STATES][TERMINALS];
-        int go_to[STATES][NON_TERMINALS];
         SLR_Table();
         void printAction();
         void printGoto();
+        std::tuple<char, int> get_action(int, int);
+        int get_go_to(int, int);
     private:
-        std::string composeAction(int , bool );
+        std::string action[STATES][TERMINALS];
+        int go_to[STATES][NON_TERMINALS];
+        std::string composeAction(int, bool );
         void assembleAction();
         void assembleGoto();
 };

@@ -4,12 +4,18 @@
 #include <vector>
 #include <grammar-constants.hpp>
 
-class SLRParser {
-    SLR_Table::SLR_Table table;
+#define ENTRY_STATE 0
+
+class SLR_Parser {
+    SLR_Table *table;
     std::vector<int> state_stack;
-    std::vector<std::string> symbol_stack;
+    std::vector<int> symbol_stack;
     public:
-        SLRParser();
+        SLR_Parser();
+        bool parse(std::vector<int>);
+        bool reduce(int); 
+    private:
+        void parse_action(std::string);
 };
 
 #endif

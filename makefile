@@ -7,10 +7,10 @@ SDIR=src
 
 TARGET=analisador
 
-_DEPS = grammar-constants.hpp
+_DEPS = SLR-parser.hpp grammar-constants.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o grammar-constants.o 
+_OBJ = SLR-parser.o main.o grammar-constants.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 

@@ -265,3 +265,23 @@ void SLR_Table::assembleGoto(){
     this->go_to[18][FUNCTION_REF] = 9;
 }
 
+std::tuple<char,int> SLR_Table::get_action(int state, int terminal){
+    std::string action = this->action[state][terminal];
+    
+    if(action.length() == 1){
+        if(action.at(0) == ACTION_ACC){
+            return std::tuple<char,int>{ACTION_ACC, GOTO_ERROR};
+        }
+        return std::tuple<char,int>{ACTION_ERROR, GOTO_ERROR};
+    }
+
+    char act = action.at(0);
+    action.erase(0,2);
+    int new_state = std::stoi(action);
+    return std::tuple<char,int>{act, new_state};
+}
+
+int SLR_Table::get_go_to(int state, int nterminal){
+    int new_state = this->go_to[state][nterminal];
+    return new_state;
+}

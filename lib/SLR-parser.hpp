@@ -13,8 +13,8 @@ class SLR_Parser {
     public:
         SLR_Parser();
         bool parse(std::vector<int>);
-        bool reduce(int); 
     private:
+        bool reduce(int); 
         void parse_action(std::string);
 };
 

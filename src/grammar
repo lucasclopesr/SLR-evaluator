@@ -29,43 +29,7 @@ sign :
         +
         -
 
-
-
-E' -> expr_list
-expr_list -> expr_list , expr
-expr -> simple_expr
-expr -> simple_expr RELOP simple_expr
-simple_expr -> term
-simple_expr -> sign term
-simple_expr -> simple_expr + term
-term -> factor
-term -> term * factor
-factor -> identifier
-factor -> constant
-factor -> ( expr )
-factor -> function_ref
-factor -> NOT factor
-function_ref -> func_identifier
-function_ref -> func_identifier ( expr_list )
-sign -> +
-sign -> -
-
-S' -> S
-S -> C C
-C -> c C
-C -> d
-
-
-E' -> E
-E -> E + T
-E -> T
-T -> T * F
-T -> F
-F -> ( E )
-F -> id
-
-
-E' -> expr_list
+G' -> expr_list
 expr_list -> expr_list , expr
 expr_list -> expr
 expr -> simple_expr
@@ -83,7 +47,207 @@ factor -> NOT factor
 function_ref -> func_identifier
 function_ref -> func_identifier ( expr_list )
 
-E' -> expr
+
+CLOSURE:
+        I0: {
+               G' -> .expr_list; 
+               expr_list -> .expr_list , expr; expr_list -> .expr; 
+               expr -> .simple_expr; 
+               expr -> .simple_expr RELOP simple_expr; 
+               simple_expr -> .term; 
+               simple_expr -> .sign term; 
+               simple_expr -> .simple_expr ADDOP term; 
+               term -> .factor; term -> .term MULOP factor; 
+               factor -> .identifier; factor -> .constant; factor -> .( expr ); 
+               factor -> .function_ref; 
+               factor -> .NOT factor; 
+               function_ref -> .func_identifier; 
+               function_ref -> .func_identifier ( expr_list );
+        },
+        I1: {
+                G' -> expr_list.; 
+                expr_list -> expr_list., expr;
+        },
+        I2: {
+                expr_list -> expr.;
+        },
+        I3: {
+                expr -> simple_expr.; 
+                expr -> simple_expr.RELOP simple_expr; 
+                simple_expr -> simple_expr.ADDOP term;
+        },
+        I4: {
+               simple_expr -> term.; 
+               term -> term.MULOP factor ;
+        },
+        I5: {
+                simple_expr -> sign.term; 
+                term -> .factor; 
+                term -> .term MULOP factor; 
+                factor -> .identifier; 
+                factor -> .constant; 
+                factor -> .( expr ); 
+                factor -> .function_ref; 
+                factor -> .NOT factor; 
+                function_ref -> .func_identifier; 
+                function_ref -> .func_identifier ( expr_list );
+        },
+        I6: {
+                term -> factor.;
+        },
+        I7: {
+                factor -> identifier.;
+        },
+        I8: {
+                factor -> constant.;
+        },
+        I9: {
+                factor -> (.expr ); 
+                expr -> .simple_expr; 
+                expr -> .simple_expr RELOP simple_expr; 
+                simple_expr -> .term; 
+                simple_expr -> .sign term; 
+                simple_expr -> .simple_expr ADDOP term; 
+                term -> .factor; 
+                term -> .term MULOP factor; 
+                factor -> .identifier; 
+                factor -> .constant; 
+                factor -> .( expr ); 
+                factor -> .function_ref; 
+                factor -> .NOT factor; 
+                function_ref -> .func_identifier; 
+                function_ref -> .func_identifier ( expr_list );
+        },
+        I10: {
+                factor -> function_ref.;
+        },
+        I11: {
+                factor -> NOT.factor; 
+                factor -> .identifier; 
+                factor -> .constant; 
+                factor -> .( expr ); 
+                factor -> .function_ref; 
+                factor -> .NOT factor; 
+                function_ref -> .func_identifier; 
+                function_ref -> .func_identifier ( expr_list );
+        },
+        I12: {
+                function_ref -> func_identifier.; 
+                function_ref -> func_identifier.( expr_list );
+        },
+        I13: {
+                expr_list -> expr_list ,.expr; 
+                expr -> .simple_expr; 
+                expr -> .simple_expr RELOP simple_expr; 
+                simple_expr -> .term; 
+                simple_expr -> .sign term; 
+                simple_expr -> .simple_expr ADDOP term; 
+                term -> .factor; 
+                term -> .term MULOP factor; 
+                factor -> .identifier; 
+                factor -> .constant; 
+                factor -> .( expr ); 
+                factor -> .function_ref; 
+                factor -> .NOT factor; 
+                function_ref -> .func_identifier; 
+                function_ref -> .func_identifier ( expr_list );
+        },
+        I14: {
+               expr -> simple_expr RELOP.simple_expr; 
+               simple_expr -> .term; 
+               simple_expr -> .sign term; 
+               simple_expr -> .simple_expr ADDOP term; 
+               term -> .factor; 
+               term -> .term MULOP factor; 
+               factor -> .identifier; 
+               factor -> .constant; 
+               factor -> .( expr ); 
+               factor -> .function_ref; 
+               factor -> .NOT factor; 
+               function_ref -> .func_identifier; 
+               function_ref -> .func_identifier ( expr_list ); 
+        },
+        I15: {
+               simple_expr -> simple_expr ADDOP.term; 
+               term -> .factor; 
+               term -> .term MULOP factor; 
+               factor -> .identifier; 
+               factor -> .constant; 
+               factor -> .( expr ); 
+               factor -> .function_ref; 
+               factor -> .NOT factor; 
+               function_ref -> .func_identifier; 
+               function_ref -> .func_identifier ( expr_list ); 
+        },
+        I16: {
+                term -> term MULOP.factor; 
+                factor -> .identifier; 
+                factor -> .constant; 
+                factor -> .( expr ); 
+                factor -> .function_ref; 
+                factor -> .NOT factor; 
+                function_ref -> .func_identifier; 
+                function_ref -> .func_identifier ( expr_list );
+        },
+        I17: {
+                simple_expr -> sign term.; 
+                term -> term.MULOP factor;
+        },
+        I18: {
+                factor -> ( expr.);
+        },
+        I19: {
+               factor -> NOT factor.; 
+        },
+        I20: {
+                function_ref -> func_identifier (.expr_list ); 
+                expr_list -> .expr_list , expr; 
+                expr_list -> .expr; 
+                expr -> .simple_expr; 
+                expr -> .simple_expr RELOP simple_expr; 
+                simple_expr -> .term; 
+                simple_expr -> .sign term; 
+                simple_expr -> .simple_expr ADDOP term; 
+                term -> .factor; term -> .term MULOP factor; 
+                factor -> .identifier; 
+                factor -> .constant; 
+                factor -> .( expr ); 
+                factor -> .function_ref; 
+                factor -> .NOT factor; 
+                function_ref -> .func_identifier; 
+                function_ref -> .func_identifier ( expr_list );
+        },
+        I21: {
+                expr_list -> expr_list , expr.;
+        },
+        I22: {
+                expr -> simple_expr RELOP simple_expr.; 
+                simple_expr -> simple_expr.ADDOP term;
+        },
+        I23: {
+                simple_expr -> simple_expr ADDOP term.; 
+                term -> term.MULOP factor;
+        },
+        I24: {
+                term -> term MULOP factor.;
+        },
+        I25: {
+                factor -> ( expr ).;
+        },
+        I26: {
+               function_ref -> func_identifier ( expr_list.); 
+               expr_list -> expr_list., expr; 
+        },
+        I27: {
+                function_ref -> func_identifier ( expr_list ).;
+        }
+
+
+
+
+
+
+G' -> expr
 expr -> simple_expr
 expr -> simple_expr RELOP simple_expr
 simple_expr -> term

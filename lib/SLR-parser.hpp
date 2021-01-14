@@ -16,6 +16,7 @@ class SLR_Parser {
     private:
         bool reduce(int); 
         void parse_action(std::string);
+        void clean_parser();
 };
 
 #endif

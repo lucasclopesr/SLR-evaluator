@@ -1,9 +1,7 @@
-#include <SLR-parser.hpp>
-
 /* O analisador léxico deve receber uma expressão e retornar um vetor de pares
  * no formato (token, ID). Em seguida, ele deve enviar esses pares ao analisador
  * sintático, que irá conferir se os tokens estão sintaticamente corretos.
- *
+ * 
  * As expressões podem ter, por exemplo, os formatos:
  *  - -3.2e-1
  *  - 1 + 4 - 8367.7 + beta, 2 + 357, 99e-10
@@ -38,6 +36,9 @@
 #define FUNCTION_REF 5
 
 #define STATES 25 // Number of states in the grammars SLR table
+
+#define ACTION_ERROR "-"
+#define ACTION_ACC "Acc"
 
 // Símbolos terminais:
 // std::regex RE_word("[a-zA-Z]*");
@@ -97,15 +98,10 @@ std::vector <int> evaluate_factor(std::string factor){
 
     std::cout << "FUNCT EXPR match: " << op[0] << std::endl;
 
-    size_t function_pos = factor.find(op[0]);
-    factor.erase(function_pos, 3);
-
     size_t open_par_pos = factor.find("(");
     size_t close_par_pos = factor.find(")");
-    std::cout << "Function expr (: " << open_par_pos << std::endl;
-    std::cout << "Function expr ): " << close_par_pos  << std::endl;
-    std::cout << "Expr size: " << factor.length()  << std::endl;
-
+    size_t function_pos = factor.find(op[0]);
+    factor.erase(function_pos, 3);
 
     std::string expr_in_parenthesis = factor.substr(open_par_pos+1, close_par_pos-open_par_pos-1);
 
@@ -185,18 +181,18 @@ std::vector <int> evaluate_term(std::string term){
     // Caso term := term MULOP factor
     std::cout << "MULOP match: " << op[1] << std::endl;
     std::cout << "MULOP length: " << op[1].length() << std::endl;
-
+    
     size_t mulop_pos = term.find(op[1]);
     // simple expression before MULOP
     std::string term1 = term.substr(0,mulop_pos);
-
+    
     // simple expression after MULOP
     std::string factor = term.substr(mulop_pos+op[1].length(),term.length());
 
 
     std::vector <int> term_result = evaluate_term(term1);
     std::vector <int> factor_result = evaluate_factor(factor);
-
+    
     int_expr.insert(int_expr.end(), term_result.begin(), term_result.end());
     int_expr.push_back(MULOP);
     int_expr.insert(int_expr.end(), factor_result.begin(), factor_result.end());
@@ -208,7 +204,7 @@ std::vector <int> evaluate_term(std::string term){
     std::vector <int> term_result = evaluate_factor(term);
     int_expr.insert(int_expr.end(), term_result.begin(), term_result.end());
   }
-
+ 
  return int_expr;
 };
 
@@ -246,7 +242,7 @@ std::vector <int>evaluate_simple_expr(std::string simple_expr){
 
   if (std::regex_search(simple_expr, op, RE_addop)){
     std::cout << "ADDOP match: " << op[1] << std::endl;
-
+    
     size_t addop_pos = simple_expr.find(op[1]);
     // simple expression before ADDOP
     std::string se1 = simple_expr.substr(0,addop_pos);
@@ -262,7 +258,7 @@ std::vector <int>evaluate_simple_expr(std::string simple_expr){
     int_expr.insert(int_expr.end(), se1_result.begin(), se1_result.end());
     int_expr.push_back(ADDOP);
     int_expr.insert(int_expr.end(), term_result.begin(), term_result.end());
-
+    
     //float result = evaluate_addop(se1_result, term_result, op[1]);
   } else {
     // simple_expr := term
@@ -294,7 +290,7 @@ std::vector <int> evaluate_expr(std::string expr){
     // simple expression before RELOP
     std::string se1 = expr.substr(0,relop_pos);
     std::cout << "se1: " << se1 << std::endl;
-
+    
     // simple expression after RELOP
     std::string se2 = expr.substr(relop_pos+1,expr.length());
     std::cout << "se2: " << se2 << std::endl;
@@ -321,9 +317,7 @@ int main(){
    * Cada input do usuário contém uma ou mais expressões que são entradas para
    * o analisador léxico. */
 
-  //try{
-
-    SLR_Parser parser;
+  try{
 
     std::string input_string = "";
     std::string expression = "";
@@ -346,11 +340,7 @@ int main(){
         std::vector <int> int_expr = evaluate_expr(expr);
         std::cout << std::endl;
         for (auto & code : int_expr){
-          std::cout << code << std::endl;
-        }
-
-        if(parser.parse(int_expr)){
-            std::cout << "VAMODALEPORAAAAAAAA" << std::endl;
+          std::cout << code;
         }
 
         std::cout << std::endl;
@@ -362,10 +352,30 @@ int main(){
 
       // std::cout << "Expressão: " << input_string << std::endl;
     }
+
     return 0;
 
-  /*} catch(std::exception& e){
+  } catch(std::exception& e){
     std::cout << "Expressão inválida" << std::endl;
-  }*/
+  }
 
 }
+
+
+
+/*
+seja a o primeiro símbolo de w$;
+while(1) { // repita indefinidamente 
+  seja S o estado no topo da pilha;
+  if ( ACTION[S,a] = shift t ) {
+    empilha t na pilha;
+    seja a o próximo símbolo da entrada;
+  } else if ( ACTION[S,a] = reduce A -> B ) {
+    desempilha símbolos || da pilha;
+    faça o estado t agora ser o topo da pilha;
+    empilhe GOTO[t,A] na pilha;
+    imprima a produção A -> B ;
+  } else if ( ACTION[S,a] = accept ) pare; //
+  else chame uma rotina de recuperação de erro;
+}
+*/

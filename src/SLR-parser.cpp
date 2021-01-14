@@ -155,8 +155,6 @@ bool SLR_Parser::reduce(int rule){
         return false;
     }
 
-    std::cout << "Reduce:" << remove_n << ", " << new_symbol << std::endl;
-
     for(int i = 0; i < remove_n; i++){
         this->state_stack.pop_back();
         this->symbol_stack.pop_back();

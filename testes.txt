@@ -26,7 +26,6 @@ casos PASSANDO:
   var MULOP (var ADDOP var)
   var MULOP (var ADDOP const)
 
-ACEITO MAS INVÁLIDO:
   const ADDOP (const ADDOP const)
   var ADDOP (const ADDOP const)
   const+(const*(const + const))

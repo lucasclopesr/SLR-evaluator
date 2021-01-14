@@ -97,10 +97,15 @@ std::vector <int> evaluate_factor(std::string factor){
 
     std::cout << "FUNCT EXPR match: " << op[0] << std::endl;
 
-    size_t open_par_pos = factor.find("(");
-    size_t close_par_pos = factor.find(")");
     size_t function_pos = factor.find(op[0]);
     factor.erase(function_pos, 3);
+
+    size_t open_par_pos = factor.find("(");
+    size_t close_par_pos = factor.find(")");
+    std::cout << "Function expr (: " << open_par_pos << std::endl;
+    std::cout << "Function expr ): " << close_par_pos  << std::endl;
+    std::cout << "Expr size: " << factor.length()  << std::endl;
+
 
     std::string expr_in_parenthesis = factor.substr(open_par_pos+1, close_par_pos-open_par_pos-1);
 
@@ -316,7 +321,7 @@ int main(){
    * Cada input do usuário contém uma ou mais expressões que são entradas para
    * o analisador léxico. */
 
-  try{
+  //try{
 
     SLR_Parser parser;
 
@@ -357,11 +362,10 @@ int main(){
 
       // std::cout << "Expressão: " << input_string << std::endl;
     }
-
     return 0;
 
-  } catch(std::exception& e){
+  /*} catch(std::exception& e){
     std::cout << "Expressão inválida" << std::endl;
-  }
+  }*/
 
 }

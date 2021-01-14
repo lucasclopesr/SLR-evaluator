@@ -1,5 +1,7 @@
 #include <SLR-parser.hpp>
 
+#define DEBBUGER false
+
 SLR_Parser::SLR_Parser(){
     this->state_stack.push_back(ENTRY_STATE);
     this->table = new SLR_Table();
@@ -20,13 +22,18 @@ bool SLR_Parser::parse(std::vector<int> expression){
     
     while(parsing){
         cur_state = this->state_stack.back();
-    std::cout << cur_state << "," << symbol << ": ";
+        if (DEBBUGER) {
+            std::cout << cur_state << "," << symbol << ": ";
+        }
         std::tuple<char, int> action = 
             this->table->get_action(cur_state, symbol);
 
         type = std::get<0>(action); //Type of action to be executed
         new_state = std::get<1>(action); //State or rule
-    std::cout << type << "-" << new_state << std::endl;
+
+        if (DEBBUGER) {
+            std::cout << type << "-" << new_state << std::endl;
+        }
 
         if( type == 's'){ //Shift
             this->state_stack.push_back(new_state);
@@ -56,6 +63,8 @@ bool SLR_Parser::parse(std::vector<int> expression){
             parsing = false; 
         }        
     }
+    this->state_stack.pop_back();
+    this->symbol_stack.pop_back();
     return is_valid;
 }
 
@@ -145,8 +154,6 @@ bool SLR_Parser::reduce(int rule){
     default:
         return false;
     }
-
-    std::cout << "Reduce:" << remove_n << ", " << new_symbol << std::endl;
 
     for(int i = 0; i < remove_n; i++){
         this->state_stack.pop_back();

@@ -63,9 +63,14 @@ bool SLR_Parser::parse(std::vector<int> expression){
             parsing = false; 
         }        
     }
-    this->state_stack.pop_back();
-    this->symbol_stack.pop_back();
+    this->clean_parser();
     return is_valid;
+}
+
+void SLR_Parser::clean_parser(){
+    this->state_stack.clear();
+    this->state_stack.push_back(0);
+    this->symbol_stack.clear();
 }
 
 bool SLR_Parser::reduce(int rule){

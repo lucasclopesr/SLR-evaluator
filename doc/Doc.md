@@ -11,23 +11,23 @@ A tarefa proposta foi a implementação de um analisador sintático de expresso�
 O primeiro passo desenvolver o analisador foi o tratamento da gramatica. Esse processo foi feito manualmente, e para tal foi nescessario entende-la. Percebemos que a definição para os sinais da gramatica existiam como uma convenção léxica além de uma regra da gramática, por isso escolhemos trata-los como simbulos lexicos, ou seja sinais foram usados como um simbulo terminal. Tendo isso definido seguimos para a expansão da gramática seguida pelo calculo do fechamento da mesma.
 
 ### A Gramática: 
- G' := expr_list
- expr_list := expr_list , expr
- expr_list := expr
- expr := simple_expr
- expr := simple_expr RELOP simple_expr
- simple_expr := term
- simple_expr := sign term
- simple_expr := simple_expr ADDOP term
- term := factor
- term := term MULOP factor
- factor := identifier
- factor := constant
- factor := ( expr )
- factor := function_ref
- factor := NOT factor
- function_ref := func_identifier
- function_ref := func_identifier ( expr_list )
+    G' := expr_list
+    expr_list := expr_list , expr
+    expr_list := expr
+    expr := simple_expr
+    expr := simple_expr RELOP simple_expr
+    simple_expr := term
+    simple_expr := sign term
+    simple_expr := simple_expr ADDOP term
+    term := factor
+    term := term MULOP factor
+    factor := identifier
+    factor := constant
+    factor := ( expr )
+    factor := function_ref
+    factor := NOT factor
+    function_ref := func_identifier
+    function_ref := func_identifier ( expr_list )
 
  ### Closure:
 

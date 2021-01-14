@@ -1,6 +1,6 @@
 #include <SLR-parser.hpp>
 
-#define DEBBUGER false
+#define DEBUGGER false
 
 SLR_Parser::SLR_Parser(){
     this->state_stack.push_back(ENTRY_STATE);
@@ -22,7 +22,7 @@ bool SLR_Parser::parse(std::vector<int> expression){
     
     while(parsing){
         cur_state = this->state_stack.back();
-        if (DEBBUGER) {
+        if (DEBUGGER) {
             std::cout << cur_state << "," << symbol << ": ";
         }
         std::tuple<char, int> action = 
@@ -31,7 +31,7 @@ bool SLR_Parser::parse(std::vector<int> expression){
         type = std::get<0>(action); //Type of action to be executed
         new_state = std::get<1>(action); //State or rule
 
-        if (DEBBUGER) {
+        if (DEBUGGER) {
             std::cout << type << "-" << new_state << std::endl;
         }
 

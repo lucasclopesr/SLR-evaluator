@@ -86,13 +86,17 @@ SNIPAR ESSE CODIGO DIREITO PLMD
 
 Essas tabelas foram preenchidas usando o conjuto de fechamento de forma a compor de forma correta a tabela SLR para a gramatica.
 
-TABELAO
+TABELAO00000000000000000000000000000
 
 Visualização das tabelas no codigo:
 
 <img src="../images/Grammar1.png">
 
 <img src="../images/Grammar2.png">
+
+
+<break>
+
 
 Esse objeto, `SLR_Table`, conta com os métodos responsaveis pela codificação e decodificação das ações esperadas para cada transição de estados valida, `composeAction()` e `get_action()` respectivamente. Ambas recebem o estado atual e simbulo atual como entrada. A notação usada armazenou shifts para um estado x como `s-x` e reduces usando a regra gramatical g como `r-g`. Além disso, o método `get_go_to()` também recebe o estado atual e o simbulo de entrada e retorna o estado o proximo estado da máquina. Por fim `printAction()` e `printGoto()` imprimem as respectivas tabelas, seus resultados podem ser observados acima.
 
@@ -112,7 +116,6 @@ O algoritmo de analise sintatica foi implementato também com o auxilio de uma c
             void clean_parser();
     }
 
-SNIPPINGGGGGGGGGGGGGGGGGGG
 
 Um objeto `SLR_Parser` conta com uma tabela `SLR_Table`, uma pilha de estados `state_stack` e uma pilha de simbulos percorridos `symbol_stack`. O método `clean_parser()` esvazia essas pilhas e `reduce()` é um auxiliar que recebe o numero da regra gramatical e realiza a redução corretamente. Por fim, `parse()` implementa o algoritmo mencionado, seu retorno indica se a expressão estava correta.
 

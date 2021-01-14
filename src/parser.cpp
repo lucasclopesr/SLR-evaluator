@@ -50,10 +50,10 @@
 std::regex RE_id("[a-zA-Z]([a-zA-Z]|[0-9])*");
 std::regex RE_constant("(\\+|-)?([0-9][0-9]*(\\.[0-9]+)?(E(\\+|-)?[0-9][0-9]*)?|[0-9][0-9]*)");
 std::regex RE_relop("(<=|>=|<>|=|<|>)(?![^(]*\\))(?!\\([^)]*)");
-std::regex RE_addop("(\\+|-|or)(?![^(]*\\))(?!\\([^)]*)");
-std::regex RE_mulop("(\\*|/|div|mod|and)(?![^(]*\\))(?!\\([^)]*)");
+std::regex RE_addop("\\b(\\+|-|or)(?![^(]*\\))");
+std::regex RE_mulop("(\\*|/|div|mod|and)(?![^(]*\\))");
 std::regex RE_fun("(sin|cos|log)");
-std::regex RE_parentheses("(\\(*\\))");
+std::regex RE_parenthesis("(\\(*\\))");
 std::regex RE_not("NOT");
 std::regex RE_sign("(\\+|-|or)");
 
@@ -101,29 +101,34 @@ std::vector <int> evaluate_factor(std::string factor){
     size_t open_par_pos = factor.find("(");
     size_t close_par_pos = factor.find(")");
     size_t function_pos = factor.find(op[0]);
-    factor.erase(open_par_pos, 1);
-    factor.erase(close_par_pos-1, 1);
     factor.erase(function_pos, 3);
+
+    std::string expr_in_parenthesis = factor.substr(open_par_pos+1, close_par_pos-open_par_pos-1);
 
     std::cout << "Function expr: " << factor << std::endl;
     std::vector <int> factor_code = evaluate_expr(factor);
 
+    int_expr.push_back(FUNC_IDENTIFIER);
     int_expr.push_back(OPEN_P);
     int_expr.insert(int_expr.end(), factor_code.begin(), factor_code.end());
     int_expr.push_back(CLOSE_P);
 
     return int_expr;
-  } else if (std::regex_search(factor, op, RE_parentheses)){
+  } else if (std::regex_search(factor, op, RE_parenthesis)){
 
-    std::cout << "PARENTHESIS  match: " << op[0] << std::endl;
+    std::cout << "PARENTHESIS  match" << std::endl;
 
     size_t open_par_pos = factor.find("(");
     size_t close_par_pos = factor.find(")");
-    factor.erase(open_par_pos, 1);
-    factor.erase(close_par_pos-1, 1);
 
-    std::cout << "Parenthesis expr: " << factor << std::endl;
-    std::vector <int> expr_code = evaluate_expr(factor);
+    // std::cout << "Parenthesis expr: " << expr_in_parenthesis << std::endl;
+    std::cout << "PARENTHESIS open: " << open_par_pos << std::endl;
+    std::cout << "PARENTHESIS close: " << close_par_pos << std::endl;
+
+    std::string expr_in_parenthesis = factor.substr(open_par_pos+1, close_par_pos-open_par_pos-1);
+
+    std::cout << "Parenthesis expr: " << expr_in_parenthesis << std::endl;
+    std::vector <int> expr_code = evaluate_expr(expr_in_parenthesis);
 
     int_expr.push_back(OPEN_P);
     int_expr.insert(int_expr.end(), expr_code.begin(), expr_code.end());
@@ -145,6 +150,7 @@ std::vector <int> evaluate_factor(std::string factor){
     return int_expr;
   } else {
     std::cout << "ERRO! SIMBOLO TERMINAL NAO RECONHECIDO" << std::endl;
+    int_expr.push_back(RELOP);
   }
   return int_expr;
 };
@@ -174,13 +180,14 @@ std::vector <int> evaluate_term(std::string term){
   if (std::regex_search(term, op, RE_mulop)){
     // Caso term := term MULOP factor
     std::cout << "MULOP match: " << op[1] << std::endl;
+    std::cout << "MULOP length: " << op[1].length() << std::endl;
     
     size_t mulop_pos = term.find(op[1]);
-    // simple expression before ADDOP
+    // simple expression before MULOP
     std::string term1 = term.substr(0,mulop_pos);
     
-    // simple expression after ADDOP
-    std::string factor = term.substr(mulop_pos+1,term.length());
+    // simple expression after MULOP
+    std::string factor = term.substr(mulop_pos+op[1].length(),term.length());
 
 
     std::vector <int> term_result = evaluate_term(term1);
@@ -240,7 +247,7 @@ std::vector <int>evaluate_simple_expr(std::string simple_expr){
     // simple expression before ADDOP
     std::string se1 = simple_expr.substr(0,addop_pos);
     std::cout << "Termo 1: " << se1 << std::endl;
-    
+
     // simple expression after ADDOP
     std::string term = simple_expr.substr(addop_pos+1,simple_expr.length());
     std::cout << "Termo 2: " << term << std::endl;
@@ -310,41 +317,48 @@ int main(){
    * Cada input do usuário contém uma ou mais expressões que são entradas para
    * o analisador léxico. */
 
-  std::string input_string = "";
-  std::string expression = "";
-  std::vector <std::string> expressions;
+  try{
+
+    std::string input_string = "";
+    std::string expression = "";
+    std::vector <std::string> expressions;
 
 
-  while (input_string.compare("quit") != 0){
-    // Recebe o input inteiro contendo uma ou mais expressões a serem avaliadas
-    std::cout << "Entre com a expressão a ser avaliada: ";
-    std::cin >> input_string;
+    while (input_string.compare("quit") != 0){
+      // Recebe o input inteiro contendo uma ou mais expressões a serem avaliadas
+      std::cout << "Entre com a expressão a ser avaliada: ";
+      std::cin >> input_string;
 
-    // Divide o input em expressões separadas por vírgula
-    expressions = split(input_string);
-    // @TODO: checar sintaxe de expr_list
+      // Divide o input em expressões separadas por vírgula
+      expressions = split(input_string);
+      // @TODO: checar sintaxe de expr_list
 
-    // Itera sobre cada expressão gerando os tokens
-    for (auto & expr : expressions){
-      std::cout << "Expr: " << expr << std::endl;
+      // Itera sobre cada expressão gerando os tokens
+      for (auto & expr : expressions){
+        std::cout << "Expr: " << expr << std::endl;
 
-      std::vector <int> int_expr = evaluate_expr(expr);
-      std::cout << std::endl;
-      for (auto & code : int_expr){
-        std::cout << code;
+        std::vector <int> int_expr = evaluate_expr(expr);
+        std::cout << std::endl;
+        for (auto & code : int_expr){
+          std::cout << code;
+        }
+
+        std::cout << std::endl;
+        // Gerar os tokens de acordo com a gramática
+        // Chamar a função do analisador sintático passando como parâmetro o vetor de tokens
+        // Obter o resultado (válido ou não) e avaliar a expressão
       }
 
-      std::cout << std::endl;
-      // Gerar os tokens de acordo com a gramática
-      // Chamar a função do analisador sintático passando como parâmetro o vetor de tokens
-      // Obter o resultado (válido ou não) e avaliar a expressão
+
+      // std::cout << "Expressão: " << input_string << std::endl;
     }
 
+    return 0;
 
-    // std::cout << "Expressão: " << input_string << std::endl;
+  } catch(std::exception& e){
+    std::cout << "Expressão inválida" << std::endl;
   }
 
-  return 0;
 }
 
 

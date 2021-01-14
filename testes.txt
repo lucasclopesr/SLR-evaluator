@@ -1,0 +1,40 @@
+casos PASSANDO:
+
+  const ADDOP const
+  var ADDOP const
+  const ADDOP var
+  var ADDOP var
+  var MULOP var
+  var MULOP const
+  const MULOP var
+  const MULOP const
+
+  func_id(const)
+  func_id(var)
+  func_id(var MULOP var)
+  func_id(var MULOP const)
+  func_id(const MULOP const)
+
+  const ADDOP (const MULOP const)
+  const ADDOP (var MULOP const)
+  const ADDOP (const MULOP var)
+
+  var ADDOP (var MULOP var)
+  var ADDOP (const MULOP var)
+  var ADDOP (var MULOP const)
+
+  var MULOP (var ADDOP var)
+  var MULOP (var ADDOP const)
+
+ACEITO MAS INVÁLIDO:
+  const ADDOP (const ADDOP const)
+  var ADDOP (const ADDOP const)
+  const+(const*(const + const))
+  const+(const*(const * const)) // const*( dá pau porque ele pega o (const para avaliar
+                                // e o vetor de int no final fica sem o (
+
+  const*(const+(const - const)) // const+( dá pau
+  func_id ( expr + const)
+
+NAO PASSOU:
+  func_id ( const + ( expr ))

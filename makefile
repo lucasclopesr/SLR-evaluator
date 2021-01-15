@@ -16,10 +16,10 @@ OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 # Test object
 TESTER=test
 
-_DEPS_T = SLR-parser.hpp grammar-constants.hpp
+_DEPS_T = grammar.hpp SLR-parser.hpp grammar-constants.hpp
 DEPS_T = $(patsubst %,$(IDIR)/%,$(_DEPS_T))
 
-_OBJ_T = SLR-parser.o grammar-constants.o tester.o
+_OBJ_T = grammar.o SLR-parser.o grammar-constants.o tester.o
 OBJ_T = $(patsubst %,$(ODIR)/%,$(_OBJ_T))
 
 

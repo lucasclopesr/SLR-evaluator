@@ -46,6 +46,8 @@ factor -> function_ref
 factor -> NOT factor
 function_ref -> func_identifier
 function_ref -> func_identifier ( expr_list )
+sign -> +
+sign -> -
 
 
 CLOSURE:
@@ -241,10 +243,6 @@ CLOSURE:
         I27: {
                 function_ref -> func_identifier ( expr_list ).;
         }
-
-
-
-
 
 
 G' -> expr

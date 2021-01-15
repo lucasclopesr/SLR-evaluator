@@ -1,6 +1,6 @@
 #include <SLR-parser.hpp>
 
-#define DEBUGGER false
+#define DEBUGGER true
 
 SLR_Parser::SLR_Parser(){
     this->state_stack.push_back(ENTRY_STATE);
@@ -84,74 +84,81 @@ bool SLR_Parser::reduce(int rule){
         break;
 
     case 1:
-        remove_n = 1;
-        new_symbol = EXPR;
-        break;
-
-    case 2:
         remove_n = 3;
-        new_symbol = EXPR;
+        new_symbol = EXPR_LIST;
+        break;
+    
+    case 2:
+        remove_n = 1;
+        new_symbol = EXPR_LIST;
         break;
 
     case 3:
         remove_n = 1;
-        new_symbol = SIMPLE_EXPR;
+        new_symbol = EXPR;
         break;
 
     case 4:
+        remove_n = 3;
+        new_symbol = EXPR;
+        break;
+
+    case 5:
+        remove_n = 1;
+        new_symbol = SIMPLE_EXPR;
+        break;
+
+    case 6:
         remove_n = 2;
         new_symbol = SIMPLE_EXPR;
         break;
     
-    case 5:
+    case 7:
         remove_n = 3;
         new_symbol = SIMPLE_EXPR;
         break;
     
-    case 6:
+    case 8:
         remove_n = 1;
         new_symbol = TERM;
         break;
 
-    case 7:
+    case 9:
         remove_n = 3;
         new_symbol = TERM;
         break;
 
-    case 8:
+    case 10:
         remove_n = 1;
         new_symbol = FACTOR;
         break;
     
-    case 9:
-        remove_n = 1;
-        new_symbol = FACTOR;
-        break;
-
-    case 10:
-        remove_n = 3;
-        new_symbol = FACTOR;
-        break;
-
     case 11:
         remove_n = 1;
         new_symbol = FACTOR;
         break;
 
-
     case 12:
+        remove_n = 3;
+        new_symbol = FACTOR;
+        break;
+
+    case 13:
+        remove_n = 1;
+        new_symbol = FACTOR;
+        break;
+
+    case 14:
         remove_n = 2;
         new_symbol = FACTOR;
         break;
 
-
-    case 13:
+    case 15:
         remove_n = 1;
         new_symbol = FUNCTION_REF;
         break;
 
-
-    case 14:
+    case 16:
         remove_n = 4;
         new_symbol = FUNCTION_REF;
         break;
